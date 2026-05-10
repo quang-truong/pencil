@@ -1,0 +1,49 @@
+project: transformer4lp
+save_path: ckpts
+name: "gat"
+dataset: "cn-cora" # cn-, aa-, ra-, katz-, shortest-path-, pagerank-
+use_features: False
+
+only_eval: False
+only_eval_test: False
+eval_test: True
+eval_every: 5
+debug: False
+seed: 0
+
+sampling_config:
+  pretrain_mode: False
+  edge_ego:
+    depth_neighbors: [[2, 20]]
+    neg_ratio: 1
+    percent: 100
+    method:
+      name: "global"
+    sample_wgt: False
+    replace: False
+
+model:
+  name: "gat"
+  hidden_size: 512
+  num_layers: 1
+  num_layers_predictor: 2
+  dropout: 0.0
+  residual: True
+  id_awareness: False
+  ortho_embedding: False
+
+save_only_improve: True
+load_model_path: None
+resume: 0
+bf16: False
+
+batch_size_training: 256
+gradient_accumulation_steps: 8 # total gas = world_size * gas_per_device
+num_epochs: 200
+max_num_samples: -1 # -1 means use all samples for each epoch
+lr: !!float "2e-4"
+weight_decay: 0.01
+num_workers: 8
+use_ddp: True
+
+note: ""

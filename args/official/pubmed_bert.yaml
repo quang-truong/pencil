@@ -1,0 +1,51 @@
+project: transformer4lp
+save_path: ckpts
+name: "bert"
+dataset: "pubmed"
+use_features: False
+feature_fusion: null  # 'early' or 'late' when use_features=True
+encoding_scheme: adjacency_row  # 'full', 'adjacency_row', or 'edge_list'
+only_eval: False
+only_eval_test: False
+eval_test: True
+eval_every: 2
+debug: False
+seed: 0
+
+sampling_config:
+  pretrain_mode: False
+  edge_ego:
+    depth_neighbors: [[2, 16]]
+    neg_ratio: 1
+    percent: 100
+    method:
+      name: "global"
+    sample_wgt: False
+    replace: False
+
+model:
+  name: "bert-base-uncased"
+  hidden_size: 512
+  num_hidden_layers: 8
+  num_attention_heads: 8
+  max_position_embeddings: 2048
+  intermediate_size: 2048 # 4 * hidden_size, similar to GPT2
+  from_pretrained: False
+
+node_remap: False
+
+save_only_improve: False
+load_model_path: None
+resume: 0
+bf16: False
+
+batch_size_training: 256
+gradient_accumulation_steps: 16 # total gas = world_size * gas_per_device
+num_epochs: 80
+max_num_samples: -1 # -1 means use all samples for each epoch
+lr: !!float "1e-4"
+weight_decay: 0.01
+num_workers: 8
+use_ddp: True
+
+note: ""
