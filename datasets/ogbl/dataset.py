@@ -435,6 +435,8 @@ def _read_ogbl_collab(
                 f"Heart split enabled but {heart_test_path} not found."
             )
 
+    val_pos_edge = split_edge["valid"]["edge"].clone()
+
     # Update split_edge for heart split mode
     if use_heart_split:
         if efficient_heart:
@@ -452,7 +454,7 @@ def _read_ogbl_collab(
         # For ogbl-collab, validation edges are used for test predictions
         # Incorporate validation edges into the graph structure
         # Not using edge_weight for validation edges
-        val_edge_index = split_edge["valid"]["edge"].t()
+        val_edge_index = val_pos_edge.t()
         # Explicitly remove self-loops before making undirected
         val_edge_index, _ = remove_self_loops(val_edge_index, None)
         val_edge_index = to_undirected(val_edge_index)
@@ -469,7 +471,7 @@ def _read_ogbl_collab(
             )
             val_edge_index = val_edge_index[:, valid_mask]
             print(
-                f"Filtered validation edges from {split_edge['valid']['edge'].shape[0]} to {val_edge_index.shape[1]} edges"
+                f"Filtered validation edges from {val_pos_edge.shape[0]} to {val_edge_index.shape[1]} edges"
             )
 
         # Combine training and validation edges
